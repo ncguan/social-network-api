@@ -36,7 +36,7 @@ module.exports = {
     updateUser(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
-            req.body,
+            { $set: req.body },
             { new: true }
         )
             .then((userData) => res.json(userData))
@@ -52,5 +52,15 @@ module.exports = {
             )
             .then(() => res.json({ message: 'User deleted' }))
             .catch((err) => res.status(500).json(err));
-    }
+    },
+
+    addFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $addToSet: { friends: req.params.friendId } },
+            { new: true }
+        )
+            .then((userData) => res.json(userData))
+            .catch((err) => res.status(500).json(err));
+    },
 }
