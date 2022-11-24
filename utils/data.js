@@ -55,17 +55,7 @@ const getRandomArrItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const getUsername = (int) => usernameData[int];
 const getEmail = (int) => emailData[int];
 
-const getRandomThought = (int) => {
-    let thoughts = [];
-    for (let i = 0; i < int; i++) {
-        thoughts.push({
-            thoughtText: getRandomArrItem(thoughtData),
-            username: getRandomArrItem(usernameData),
-            reactions: [...getReactions(Math.floor(Math.random() * reactionData.length))],
-        });
-    }
-    return thoughts;
-};
+const getThought = (int) => thoughtData[int];
 
 const getReactions = (int) => {
     let reactions = [];
@@ -81,4 +71,4 @@ const getReactions = (int) => {
     return reactions;
 };
 
-module.exports = { getUsername, getEmail, getRandomArrItem, getRandomThought, getReactions };
+module.exports = { getUsername, getEmail, getThought, getReactions };

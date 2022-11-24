@@ -19,10 +19,17 @@ const reactionSchema = new Schema({
     default: Date.now,
     get: formatTimestamp
   }
-});
+},
+{
+  toJSON: {
+    getters: true
+  },
+  id: false
+}
+);
 
-function formatTimestamp(date){
-  return date.toString();
+function formatTimestamp(date) {
+  return date.toLocaleString();
 }
 
 module.exports = reactionSchema;

@@ -22,14 +22,15 @@ const thoughtSchema = new Schema(
   },
   {
     toJSON: {
-      virtuals: true
+      virtuals: true,
+      getters: true
     },
     id: false
   }
 );
 
 function formatTimestamp(date){
-  return date.toString();
+  return date.toLocaleString();
 }
 
 thoughtSchema.virtual('reactionCount').get(function (){
