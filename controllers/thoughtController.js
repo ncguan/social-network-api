@@ -21,19 +21,50 @@ module.exports = {
             .catch((err) => res.status(500).json(err));
     },
 
-    createThought(req, res){
+    createThought(req, res) {
         Thought.create(req.body)
-        .then((thought) => res.json(thought))
-        .catch((err) => res.status(500).json(err))
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: 'No thought created' })
+                    : User.findOneAndUpdate(
+                        { _id: req.body.userId },
+                        { $addToSet: { thoughts: thought._id } },
+                        { new: true }
+                    )
+            )
+            .then((thoughtData) => res.json(thoughtData))
+            .catch((err) => res.status(500).json(err))
     },
 
     updateThought(req, res) {
         Thought.findOneAndUpdate(
-            {_id: req.params.thoughtId},
-            {$set: {thoughtText: req.body.thoughtText}},
-            {new: true}
+            { _id: req.params.thoughtId },
+            { $set: { thoughtText: req.body.thoughtText } },
+            { new: true }
         )
-        .then((thoughtData) => res.json(thoughtData))
-        .catch((err) => res.status(500).json(err));
+            .then((thoughtData) => res.json(thoughtData))
+            .catch((err) => res.status(500).json(err));
+    },
+
+    deleteThought(req, res) {
+        Thought.findOneAndDelete({ _id: req.params.thoughtId })
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: 'No thought with that ID' })
+                    : User.findOneAndUpdate(
+                        { thoughts: req.params.thoughtId },
+                        { $pull: { thoughts: req.params.thoughtId } },
+                        { new: true }
+                    )
+            )
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'Thought deleted, but no user found' })
+                    : res.json({ message: 'Thought deleted' })
+            )
+            .catch((err) => {
+                console.log(err);
+                res.status(500).json(err);
+            })
     }
 }
